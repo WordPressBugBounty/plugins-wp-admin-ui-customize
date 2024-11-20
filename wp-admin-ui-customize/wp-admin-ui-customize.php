@@ -3,9 +3,9 @@
 Plugin Name: WP Admin UI Customize
 Description: An excellent plugin to customize the Wordpress management UI.
 Plugin URI: http://wpadminuicustomize.com/
-Version: 1.5.13
+Version: 1.5.14
 Author: gqevu6bsiz
-Author URI: http://gqevu6bsiz.chicappa.jp/
+Author URI: https://gqevu6bsiz.chicappa.jp/
 Text Domain: wp-admin-ui-customize
 Domain Path: /languages
 */
@@ -57,12 +57,12 @@ class WP_Admin_UI_Customize
 
 
 	function __construct() {
-		$this->Ver = '1.5.13';
+		$this->Ver = '1.5.14';
 		$this->Name = 'WP Admin UI Customize';
 		$this->Dir = plugin_dir_path( __FILE__ );
 		$this->Url = plugin_dir_url( __FILE__ );
 		$this->Site = 'http://wpadminuicustomize.com/';
-		$this->AuthorUrl = 'http://gqevu6bsiz.chicappa.jp/';
+		$this->AuthorUrl = 'https://gqevu6bsiz.chicappa.jp/';
 		$this->ltd = 'wauc';
 		$this->Record = array(
 			"user_role" => $this->ltd . '_user_role_setting',
@@ -1858,7 +1858,7 @@ class WP_Admin_UI_Customize
 
 			if( !empty( $GetData["login_headertitle"] ) ) {
 				$title = strip_tags( $GetData["login_headertitle"] );
-				$title = $this->val_replace( $title );
+				$title = esc_html( $this->val_replace( $title ) );
 			}
 		}
 
@@ -1876,7 +1876,7 @@ class WP_Admin_UI_Customize
 				$logo = strip_tags( $GetData["login_headerlogo"] );
 				$logo = $this->val_replace( $logo );
 
-				echo '<style type="text/css">.login h1 a { background-image: url(' . $logo . '); }</style>';
+				echo '<style type="text/css">.login h1 a { background-image: url(' . esc_js( $logo ) . '); }</style>';
 			}
 
 			if( !empty( $GetData["login_css"] ) ) {
@@ -1900,7 +1900,7 @@ class WP_Admin_UI_Customize
 			if( !empty( $GetData["login_footer"] ) ) {
 				$text = $this->val_replace( stripslashes( $GetData["login_footer"] ) );
 
-				echo $text;
+				echo wp_kses_post( $text );
 			}
 
 		}
@@ -2063,7 +2063,7 @@ class WP_Admin_UI_Customize
 								$node["group"] = "";
 							}
 
-							$node["title"] = $this->val_replace( $node["title"] );
+							$node["title"] = wp_kses_post( $this->val_replace( $node["title"] ) );
 
 							$SettingNodes[$Boxtype][$node_type][$key] = $node;
 
@@ -2151,7 +2151,7 @@ class WP_Admin_UI_Customize
 								}
 								foreach( $activated_plugin as $plugin_slug => $v ) {
 									if( !empty( $other_plugin["admin_bar"][$plugin_slug] ) && array_key_exists( $node["id"] , $other_plugin["admin_bar"][$plugin_slug] ) ) {
-										$SettingNodes[$Boxtype][$node_type][$key]["title"] = $All_Nodes[$node["id"]]->title;
+										$SettingNodes[$Boxtype][$node_type][$key]["title"] = wp_kses_post( $All_Nodes[$node["id"]]->title );
 										$SettingNodes[$Boxtype][$node_type][$key]["href"] = $All_Nodes[$node["id"]]->href;
 									}
 								}
@@ -2302,7 +2302,7 @@ class WP_Admin_UI_Customize
 			$footer_text = $this->val_replace( stripslashes( $GetData["footer_text"] ) );
 		}
 
-		return $footer_text;
+		return wp_kses_post( $footer_text );
 	}
 
 	// FilterStart
@@ -2356,7 +2356,7 @@ class WP_Admin_UI_Customize
 						if( !empty( $Data[$metabox_id]["remove"] ) ) {
 							remove_meta_box( $metabox_id , 'dashboard' , $context );
 						} elseif( !empty( $Data[$metabox_id]["name"] ) ) {
-							$wp_meta_boxes["dashboard"][$context][$priority][$metabox_id]["title"] = stripslashes( $Data[$metabox_id]["name"] );
+							$wp_meta_boxes["dashboard"][$context][$priority][$metabox_id]["title"] = wp_kses_post( stripslashes( $Data[$metabox_id]["name"] ) );
 						}
 					}
 				}
@@ -2400,7 +2400,7 @@ class WP_Admin_UI_Customize
 									} else {
 
 										if( !empty( $Data[$metabox_id]["name"] ) ) {
-											$wp_meta_boxes[$post_type][$context][$priority][$metabox_id]["title"] = stripslashes( $Data[$metabox_id]["name"] );
+											$wp_meta_boxes[$post_type][$context][$priority][$metabox_id]["title"] = wp_kses_post( stripslashes( $Data[$metabox_id]["name"] ) );
 										}
 
 										if( !empty( $Data[$metabox_id]["toggle"] ) ) {
@@ -2534,7 +2534,7 @@ class WP_Admin_UI_Customize
 						$mm_slug_decode = htmlspecialchars_decode( $mm["slug"] );
 						foreach($menu as $gm_pos => $gm) {
 							if($mm["slug"] == $gm[2] or $mm_slug_decode == $gm[2]) {
-								$menu[$gm_pos][0] = $this->val_replace( $mm["title"] );
+								$menu[$gm_pos][0] = wp_kses_post( $this->val_replace( $mm["title"] ) );
 								$SetMain_menu[] = $menu[$gm_pos];
 								$gm_search = true;
 								break;
@@ -2550,7 +2550,7 @@ class WP_Admin_UI_Customize
 												break;
 											}
 										}
-										$submenu[$gsm_parent_slug][$gsm_pos][0] = $this->val_replace( $mm["title"] );
+										$submenu[$gsm_parent_slug][$gsm_pos][0] = wp_kses_post( $this->val_replace( $mm["title"] ) );
 										$SetMain_menu[] = $submenu[$gsm_parent_slug][$gsm_pos];
 
 									}
@@ -2569,7 +2569,7 @@ class WP_Admin_UI_Customize
 							$gm_search = false;
 							foreach($menu as $gm_pos => $gm) {
 								if($sm["slug"] == $gm[2] or $sm_slug_decode == $gm[2]) {
-									$menu[$gm_pos][0] = $this->val_replace( $sm["title"] );
+									$menu[$gm_pos][0] = wp_kses_post( $this->val_replace( $sm["title"] ) );
 									$SetMain_submenu[$sm["parent_slug"]][] = $menu[$gm_pos];
 									$gm_search = true;
 									break;
@@ -2579,7 +2579,7 @@ class WP_Admin_UI_Customize
 								foreach($submenu as $gsm_parent_slug => $v) {
 									foreach($v as $gsm_pos => $gsm) {
 										if($sm["slug"] == $gsm[2] or $sm_slug_decode == $gsm[2]) {
-											$submenu[$gsm_parent_slug][$gsm_pos][0] = $this->val_replace( $sm["title"] );
+											$submenu[$gsm_parent_slug][$gsm_pos][0] = wp_kses_post( $this->val_replace( $sm["title"] ) );
 											$SetMain_submenu[$sm["parent_slug"]][] = $submenu[$gsm_parent_slug][$gsm_pos];
 										}
 									}

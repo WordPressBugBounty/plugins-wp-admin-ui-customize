@@ -4,7 +4,7 @@ Donate link: http://gqevu6bsiz.chicappa.jp/please-donation/
 Tags: admin, post, posts, page, option, sitemenu, menu, custom, customize, dashboard, admin_bar, multisite, network, metabox
 Requires at least: 4.2
 Tested up to: 4.9
-Stable tag: 1.5.13
+Stable tag: 1.5.14
 License: GPL2
 
 Customize the management screen UI.
@@ -49,6 +49,9 @@ These to Customization is possible.
 11. Plugin Capabilities Settings
 
 == Changelog ==
+
+= 1.5.14 2024-11-20 =
+* Security updated: Some values escape.
 
 = 1.5.13 2022-11-04 =
 * Security updated: Some values escape.
